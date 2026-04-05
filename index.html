@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내주유소 - 내 주유소 가격 순위 알림</title>
+    <meta name="description" content="내 주유소가 지금 비싼지 싼지를, 내가 찾아보지 않아도 알려주는 앱. 주변 순위, 가격 변동 Push 알림.">
+    <meta name="theme-color" content="#08080B">
+    <meta property="og:title" content="내주유소 - 내 주유소 가격 순위 알림">
+    <meta property="og:description" content="내 주유소가 지금 비싼지 싼지를, 내가 찾아보지 않아도 알려주는 앱">
+    <meta property="og:image" content="images/screenshot1.png">
+    <link rel="icon" type="image/png" href="images/appicon.png">
+
+    <!-- GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VSJ880MKN6"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VSJ880MKN6');
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #08080B;
+            color: #fff;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 20px 0;
+        }
+        .header img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+        .header span {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 48px 20px 24px;
+        }
+        .hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            background: linear-gradient(180deg, #fff 30%, #98989D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 15px;
+            color: #98989D;
+            line-height: 1.6;
+        }
+
+        /* ── Download Button ── */
+        .download-top {
+            text-align: center;
+            padding: 20px 20px 32px;
+        }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 14px;
+            background: #fff;
+            color: #000;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-download:hover { background: #e5e5e5; }
+        .btn-download svg { width: 20px; height: 20px; fill: #000; }
+        /* 출시 전 비활성 */
+        .btn-download.coming-soon {
+            background: #1C1C1E;
+            color: #636366;
+            cursor: default;
+        }
+        .btn-download.coming-soon svg { fill: #636366; }
+        .btn-download.coming-soon:hover { background: #1C1C1E; }
+
+        /* PC에서 두 스토어 나란히 */
+        .store-badges-pc {
+            display: none;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .store-badges-pc .store-badge-sm {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 10px;
+            background: #1C1C1E;
+            color: #636366;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .store-badges-pc .store-badge-sm svg { width: 16px; height: 16px; fill: #636366; }
+
+        /* ── Screenshots ── */
+        .screenshots {
+            padding: 16px 0 36px;
+        }
+        .screenshots-track {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 0 20px;
+        }
+        .screenshots-track img {
+            width: 220px;
+            max-width: 60%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ── Features ── */
+        .features {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 8px 20px 32px;
+        }
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+            padding: 18px 0;
+        }
+        .feature + .feature {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .feature-icon.rank { background: rgba(48, 209, 88, 0.15); }
+        .feature-icon.push { background: rgba(10, 132, 255, 0.15); }
+        .feature-icon.compare { background: rgba(255, 214, 10, 0.15); }
+        .feature h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .feature p {
+            font-size: 13px;
+            color: #98989D;
+            line-height: 1.5;
+        }
+
+        /* ── Links ── */
+        .links {
+            padding: 24px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .links a {
+            color: #48484A;
+            text-decoration: none;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .links a:hover { color: #98989D; }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 16px 20px 36px;
+            color: #38383A;
+            font-size: 11px;
+            line-height: 2;
+        }
+
+        /* ── Tablet (768px+) ── */
+        @media (min-width: 768px) {
+            .header { padding: 32px 24px 0; }
+            .header img { width: 40px; height: 40px; border-radius: 10px; }
+            .header span { font-size: 18px; }
+
+            .hero { padding: 72px 24px 28px; }
+            .hero h1 { font-size: 40px; }
+            .hero p { font-size: 18px; }
+
+            .download-top { padding: 24px 24px 40px; }
+            .btn-download { font-size: 17px; padding: 16px 36px; }
+
+            .screenshots {
+                padding: 20px 0 48px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .screenshots::-webkit-scrollbar { display: none; }
+            .screenshots-track {
+                flex-direction: row;
+                gap: 20px;
+                padding: 0 calc((100vw - 780px) / 2);
+                width: max-content;
+            }
+            .screenshots-track img { width: 240px; max-width: none; border-radius: 20px; flex-shrink: 0; }
+
+            .features { padding: 16px 24px 40px; }
+            .feature { gap: 16px; padding: 22px 0; }
+            .feature-icon { width: 44px; height: 44px; font-size: 20px; }
+            .feature h3 { font-size: 16px; }
+            .feature p { font-size: 14px; }
+
+            .links { gap: 24px; }
+            .links a { font-size: 13px; }
+            .footer { font-size: 12px; }
+        }
+
+        /* ── Desktop (1024px+) ── */
+        @media (min-width: 1024px) {
+            .hero { padding: 88px 24px 32px; }
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 20px; }
+
+            /* PC: 단일 버튼 숨기고 두 스토어 배지 노출 */
+            .btn-download-mobile { display: none; }
+            .store-badges-pc { display: flex; }
+
+            .screenshots { padding: 24px 0 56px; }
+            .screenshots-track {
+                gap: 24px;
+                padding: 0 calc((100vw - 960px) / 2);
+                width: max-content;
+            }
+            .screenshots-track img { width: 300px; border-radius: 24px; }
+
+            .features {
+                max-width: 800px;
+                display: flex;
+                gap: 32px;
+                padding: 24px 24px 48px;
+            }
+            .feature { border: none !important; padding: 0; }
+            .feature + .feature { border-top: none; }
+
+            .footer { padding: 24px 24px 48px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/appicon.png" alt="내주유소 앱 아이콘">
+        <span>내주유소</span>
+    </div>
+
+    <div class="hero">
+        <h1>내 주유소가 지금<br>비싼지 싼지를,<br>찾아보지 않아도</h1>
+        <p>자주 가는 주유소를 등록하면<br>가격이 변할 때 알아서 알려드려요</p>
+    </div>
+
+    <div class="download-top">
+        <!-- 모바일: 단일 버튼 (OS 자동 분기) -->
+        <a id="downloadBtn" class="btn-download coming-soon btn-download-mobile" href="#" onclick="handleDownload(event)">
+            <svg id="downloadIcon" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            곧 만나요
+        </a>
+
+        <!-- PC: 두 스토어 배지 -->
+        <div class="store-badges-pc">
+            <a class="store-badge-sm" id="appStoreLink" href="#">
+                <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                App Store 준비중
+            </a>
+            <a class="store-badge-sm" id="playStoreLink" href="#">
+                <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 13l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/></svg>
+                Google Play 준비중
+            </a>
+        </div>
+    </div>
+
+    <div class="screenshots">
+        <div class="screenshots-track">
+            <img src="images/screenshot1.png" alt="메인 가격 화면 - 주유소 가격과 순위를 한눈에">
+            <img src="images/screenshot2.png" alt="주변 순위 화면 - 가격 비교 리스트">
+            <img src="images/screenshot3.png" alt="Push 알림 - 가격 변동 시 자동 알림">
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon rank">⛽</div>
+            <div>
+                <h3>주변에서 몇 등인지 바로 확인</h3>
+                <p>내 주유소의 가격 순위와 게이지를 한눈에 볼 수 있어요</p>
+            </div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon push">🔔</div>
+            <div>
+                <h3>가격 변동 Push 알림</h3>
+                <p>의미 있는 변동만 하루 최대 2번. 스팸 없이 필요한 것만</p>
+            </div>
+        </div>
+        <div class="feature">
+            <div class="feature-icon compare">📊</div>
+            <div>
+                <h3>최저가 대비 얼마나 차이나는지</h3>
+                <p>내 주유량 기준으로 환산해서 실제 금액 차이를 알려드려요</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="links">
+        <a href="terms.html">이용약관</a>
+        <a href="privacy.html">개인정보처리방침</a>
+        <a href="location.html">위치기반서비스 이용약관</a>
+    </div>
+
+    <div class="footer">
+        <p>운영자: AHPartners | ah.partners.9@gmail.com</p>
+        <p>가격 데이터 출처: 한국석유공사 오피넷</p>
+    </div>
+
+    <script>
+        // 스토어 URL — 출시 후 실제 URL로 교체
+        var APP_STORE_URL = '';   // 예: 'https://apps.apple.com/app/id...'
+        var PLAY_STORE_URL = '';  // 예: 'https://play.google.com/store/apps/details?id=...'
+
+        var ua = navigator.userAgent || '';
+        var isIOS = /iPhone|iPad|iPod/i.test(ua);
+        var isAndroid = /Android/i.test(ua);
+
+        // 모바일 단일 버튼: OS에 맞는 아이콘 + 텍스트 설정
+        var btn = document.getElementById('downloadBtn');
+        var icon = document.getElementById('downloadIcon');
+        if (isAndroid) {
+            icon.innerHTML = '<path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 13l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/>';
+        }
+
+        // 출시 후: coming-soon 클래스 제거 + URL 설정하면 자동 활성화
+        function handleDownload(e) {
+            if (!APP_STORE_URL && !PLAY_STORE_URL) {
+                e.preventDefault();
+                return;
+            }
+            if (isIOS && APP_STORE_URL) {
+                btn.href = APP_STORE_URL;
+                btn.textContent = '앱 설치하기';
+                btn.classList.remove('coming-soon');
+            } else if (isAndroid && PLAY_STORE_URL) {
+                btn.href = PLAY_STORE_URL;
+                btn.textContent = '앱 설치하기';
+                btn.classList.remove('coming-soon');
+            } else {
+                e.preventDefault();
+            }
+            gtag('event', 'click_download', { platform: isIOS ? 'ios' : isAndroid ? 'android' : 'pc' });
+        }
+
+        // 출시 후 활성화: URL이 있으면 버튼 텍스트/스타일 자동 변경
+        (function() {
+            var storeUrl = isIOS ? APP_STORE_URL : isAndroid ? PLAY_STORE_URL : '';
+            if (storeUrl) {
+                btn.href = storeUrl;
+                btn.textContent = '앱 설치하기';
+                btn.classList.remove('coming-soon');
+            }
+            if (APP_STORE_URL) {
+                var asl = document.getElementById('appStoreLink');
+                asl.href = APP_STORE_URL;
+                asl.querySelector('svg').nextSibling.textContent = ' App Store';
+            }
+            if (PLAY_STORE_URL) {
+                var psl = document.getElementById('playStoreLink');
+                psl.href = PLAY_STORE_URL;
+                psl.querySelector('svg').nextSibling.textContent = ' Google Play';
+            }
+        })();
+    </script>
+</body>
+</html>
