@@ -102,14 +102,8 @@
         .btn-download.coming-soon svg { fill: #636366; }
         .btn-download.coming-soon:hover { background: #1C1C1E; }
 
-        /* PC에서 두 스토어 나란히 */
-        .store-badges-pc {
-            display: none;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .store-badges-pc .store-badge-sm {
+        /* 스토어 배지 (모바일 + PC 공통) */
+        .store-badge-sm {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -121,7 +115,23 @@
             font-weight: 500;
             text-decoration: none;
         }
-        .store-badges-pc .store-badge-sm svg { width: 16px; height: 16px; fill: #636366; }
+        .store-badge-sm svg { width: 16px; height: 16px; fill: #636366; }
+
+        /* 모바일: 세로 배치 */
+        .store-badges-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* PC: 가로 배치 (기본 숨김) */
+        .store-badges-pc {
+            display: none;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
 
         /* ── Screenshots ── */
         .screenshots {
@@ -253,8 +263,8 @@
             .hero h1 { font-size: 48px; }
             .hero p { font-size: 20px; }
 
-            /* PC: 단일 버튼 숨기고 두 스토어 배지 노출 */
-            .btn-download-mobile { display: none; }
+            /* PC: 모바일 배지 숨기고 PC 배지 노출 */
+            .store-badges-mobile { display: none; }
             .store-badges-pc { display: flex; }
 
             .screenshots { padding: 24px 0 56px; }
@@ -290,11 +300,17 @@
     </div>
 
     <div class="download-top">
-        <!-- 모바일: 단일 버튼 (OS 자동 분기) -->
-        <a id="downloadBtn" class="btn-download coming-soon btn-download-mobile" href="#" onclick="handleDownload(event)">
-            <svg id="downloadIcon" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            곧 만나요
-        </a>
+        <!-- 모바일: 두 스토어 버튼 -->
+        <div class="store-badges-mobile">
+            <a class="store-badge-sm" href="#">
+                <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                App Store 준비중
+            </a>
+            <a class="store-badge-sm" href="https://bit.ly/4yvtF8y" target="_blank" onclick="gtag('event','click_download',{platform:'android'})">
+                <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 13l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/></svg>
+                Google Play 베타 테스터 신청
+            </a>
+        </div>
 
         <!-- PC: 두 스토어 배지 -->
         <div class="store-badges-pc">
@@ -302,9 +318,9 @@
                 <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
                 App Store 준비중
             </a>
-            <a class="store-badge-sm" id="playStoreLink" href="#">
+            <a class="store-badge-sm" id="playStoreLink" href="https://bit.ly/4yvtF8y" target="_blank" onclick="gtag('event','click_download',{platform:'android'})">
                 <svg viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 13l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/></svg>
-                Google Play 준비중
+                Google Play 베타 테스터 신청
             </a>
         </div>
     </div>
@@ -353,58 +369,16 @@
     </div>
 
     <script>
-        // 스토어 URL
         var APP_STORE_URL = 'https://apps.apple.com/kr/app/id6760814869';
-        var PLAY_STORE_URL = '';  // Android 출시 후 추가 예정
+        var PLAY_STORE_URL = 'https://bit.ly/4yvtF8y';
 
-        var ua = navigator.userAgent || '';
-        var isIOS = /iPhone|iPad|iPod/i.test(ua);
-        var isAndroid = /Android/i.test(ua);
-
-        // 모바일 단일 버튼: OS에 맞는 아이콘 + 텍스트 설정
-        var btn = document.getElementById('downloadBtn');
-        var icon = document.getElementById('downloadIcon');
-        if (isAndroid) {
-            icon.innerHTML = '<path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 010 1.38l-2.302 2.302L15.396 13l2.302-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/>';
-        }
-
-        // 출시 후: coming-soon 클래스 제거 + URL 설정하면 자동 활성화
-        function handleDownload(e) {
-            if (!APP_STORE_URL && !PLAY_STORE_URL) {
-                e.preventDefault();
-                return;
-            }
-            if (isIOS && APP_STORE_URL) {
-                btn.href = APP_STORE_URL;
-                btn.textContent = '앱 설치하기';
-                btn.classList.remove('coming-soon');
-            } else if (isAndroid && PLAY_STORE_URL) {
-                btn.href = PLAY_STORE_URL;
-                btn.textContent = '앱 설치하기';
-                btn.classList.remove('coming-soon');
-            } else {
-                e.preventDefault();
-            }
-            gtag('event', 'click_download', { platform: isIOS ? 'ios' : isAndroid ? 'android' : 'pc' });
-        }
-
-        // 출시 후 활성화: URL이 있으면 버튼 텍스트/스타일 자동 변경
         (function() {
-            var storeUrl = isIOS ? APP_STORE_URL : isAndroid ? PLAY_STORE_URL : '';
-            if (storeUrl) {
-                btn.href = storeUrl;
-                btn.textContent = '앱 설치하기';
-                btn.classList.remove('coming-soon');
-            }
             if (APP_STORE_URL) {
                 var asl = document.getElementById('appStoreLink');
-                asl.href = APP_STORE_URL;
-                asl.querySelector('svg').nextSibling.textContent = ' App Store';
-            }
-            if (PLAY_STORE_URL) {
-                var psl = document.getElementById('playStoreLink');
-                psl.href = PLAY_STORE_URL;
-                psl.querySelector('svg').nextSibling.textContent = ' Google Play';
+                if (asl) {
+                    asl.href = APP_STORE_URL;
+                    asl.querySelector('svg').nextSibling.textContent = ' App Store';
+                }
             }
         })();
     </script>
